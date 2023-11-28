@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:forgotten_key/models/char_game_info.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,15 +57,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _filePath = '';
+  CharGameInfo? _info;
   Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        allowedExtensions: ['gam'],
-        type: FileType.custom);
-    if (result != null) {
+    String? path = await FilePicker.platform
+        .pickFiles(
+            allowMultiple: false,
+            allowedExtensions: ['gam'],
+            type: FileType.custom)
+        .then((value) => value?.files.single.path);
+    if (path != null) {
+      final info = await CharGameInfo.read(path);
       setState(() {
-        _filePath = "${result.files.single.path}";
+        _info = info;
       });
     }
   }
@@ -110,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              _filePath,
+              "${_info?.path}",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
