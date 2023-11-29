@@ -36,6 +36,8 @@ void main() {
     expect(
         () => reader.read(),
         throwsA(predicate((e) =>
-            e is Exception && e.toString() == 'Exception: Invalid header')));
+            e is Exception &&
+            e.toString() ==
+                'Exception: Invalid header of WAAA. It should be GAME.')));
   });
 }
