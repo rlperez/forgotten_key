@@ -57,6 +57,7 @@ pubspec.lock
 
 # dotenv environment variables file
 .env*
+*.env
 
 # Symbolication related
 app.*.symbols
