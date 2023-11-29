@@ -1,18 +1,25 @@
 import 'dart:io';
 
 import 'package:forgotten_key/models/char_game_info.dart';
+import 'package:loggy/loggy.dart';
 
-class CharGameInfoReader {
-  static Future<CharGameInfo> read(String path) async {
-    final file = await File(path).open();
-    final temp = await file.read(4);
-    // temp should be "GAME" here
-    final size = await file.length();
-    print("size = $size");
-    await file.close();
-    return CharGameInfo(
-      name: 'Unknown',
-      path: path,
-    );
+class CharGameInfoReader with UiLoggy {
+  final String path;
+  CharGameInfoReader(this.path);
+
+  Future<CharGameInfo> read() async {
+    try {
+      final file = await File(path).open();
+      await file.close();
+      return CharGameInfo(
+        name: 'Unknown',
+        path: path,
+      );
+    } catch (e) {
+      return CharGameInfo(
+        name: 'Unknown',
+        path: path,
+      );
+    }
   }
 }

@@ -16,6 +16,20 @@ migrate_working_dir/
 *.iws
 .idea/
 
+# VS Code related
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
@@ -43,6 +57,7 @@ pubspec.lock
 
 # dotenv environment variables file
 .env*
+*.env
 
 # Symbolication related
 app.*.symbols

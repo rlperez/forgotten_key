@@ -7,3 +7,9 @@ The goal is to provide a modern, cross platform, and open source tool for editin
 The motivation is as follows. Baldur's Gate II is my favorite game of all time. Every few years I will play through this family of games however as of late I only own Linux and Mac computers. It would be rare that I would want to edit a character but I found that instance. Initially thinking I would play a build I have never played, dual class fighter to druid, I found after earning 3 levels that I had created a character that could not be dual classed. Using EEKeeper with Wine on Linux seemed like a less than optimal solution and now I am creating this.
 
 ## Getting Started
+
+## Usage
+
+### Environment Variables
+
+- `FK_DEBUG` - Set to `true` to enable debug logging. This will print out a lot of information to the console. This is useful for debugging but not for normal use.

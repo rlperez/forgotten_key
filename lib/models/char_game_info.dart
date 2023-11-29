@@ -10,7 +10,7 @@ class CharGameInfo {
   });
 
   static Future<CharGameInfo> read(String path) async {
-    final info = CharGameInfoReader.read(path);
+    final info = CharGameInfoReader(path).read();
     return await info;
   }
 }

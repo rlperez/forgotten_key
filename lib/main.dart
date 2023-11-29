@@ -1,8 +1,33 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:forgotten_key/models/char_game_info.dart';
+import 'dart:io';
+import 'package:env_variables/env_variables.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:loggy/loggy.dart';
 
-void main() {
+Future<void> main() async {
+  final file = File('.env');
+  if (await file.exists()) {
+    final content = await file.readAsString();
+    if (content.isNotEmpty) {
+      await dotenv.load();
+    }
+  }
+
+  final logLevel =
+      EnvVariables.fromEnvironment('FK_DEBUG', defaultValue: 'false') == 'true'
+          ? LogLevel.debug
+          : LogLevel.warning;
+  Loggy.initLoggy(
+    logPrinter: const PrettyDeveloperPrinter(),
+    logOptions: LogOptions(
+      logLevel,
+      stackTraceLevel: LogLevel.error,
+    ),
+  );
+
   runApp(const MyApp());
 }
 
@@ -13,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Forgotten Key',
       theme: ThemeData(
         // This is the theme of your application.
         //
