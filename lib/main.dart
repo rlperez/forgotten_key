@@ -147,8 +147,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _pickFile,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        tooltip: 'Open File',
+        child: const Icon(Icons.file_open),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
