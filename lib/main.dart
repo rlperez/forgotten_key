@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
+import 'dart:io';
 
-void main() async {
+Future<void> main() async {
+  await dotenv.load();
+
   final logLevel =
       EnvVariables.fromEnvironment('FK_DEBUG', defaultValue: 'false') == 'true'
           ? LogLevel.debug
@@ -17,8 +20,6 @@ void main() async {
       stackTraceLevel: LogLevel.error,
     ),
   );
-
-  await dotenv.load(fileName: ".env");
 
   runApp(const MyApp());
 }
