@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:env_variables/env_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -5,13 +7,19 @@ import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 
 Future<void> main() async {
-  await dotenv.load();
+  final file = File('.env');
+
+  if (await file.exists()) {
+    final content = await file.readAsString();
+    if (content.isNotEmpty) {
+      await dotenv.load();
+    }
+  }
 
   final logLevel =
       EnvVariables.fromEnvironment('FK_DEBUG', defaultValue: 'false') == 'true'
           ? LogLevel.debug
           : LogLevel.warning;
-
   Loggy.initLoggy(
     logPrinter: const PrettyDeveloperPrinter(),
     logOptions: LogOptions(
