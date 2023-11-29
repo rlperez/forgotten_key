@@ -32,10 +32,10 @@ class CharGameInfoReader with UiLoggy {
   String _readHeader(RandomAccessFile file) {
     final header = file.readSync(4);
     String headerString = String.fromCharCodes(header);
-    print(headerString);
+
     if (headerString != 'GAME') {
-      print('Invalid header');
-      throw Exception('Invalid header');
+      logError('Invalid header');
+      throw Exception('Invalid header of $headerString. It should be GAME.');
     }
 
     return headerString;
