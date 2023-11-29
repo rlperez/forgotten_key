@@ -8,18 +8,36 @@ class CharGameInfoReader with UiLoggy {
   CharGameInfoReader(this.path);
 
   Future<CharGameInfo> read() async {
+    RandomAccessFile? file;
+
     try {
-      final file = await File(path).open();
-      await file.close();
+      file = await File(path).open();
+      final header = _readHeader(file);
+
       return CharGameInfo(
         name: 'Unknown',
         path: path,
+        header: header,
       );
     } catch (e) {
-      return CharGameInfo(
-        name: 'Unknown',
-        path: path,
-      );
+      loggy.error(e);
+      rethrow;
+    } finally {
+      if (file != null) {
+        await file.close();
+      }
     }
+  }
+
+  String _readHeader(RandomAccessFile file) {
+    final header = file.readSync(4);
+    String headerString = String.fromCharCodes(header);
+    print(headerString);
+    if (headerString != 'GAME') {
+      print('Invalid header');
+      throw Exception('Invalid header');
+    }
+
+    return headerString;
   }
 }
