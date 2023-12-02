@@ -37,7 +37,6 @@ class CharGameInfoReader with UiLoggy {
       final unknown4 = file.readSync(19);
       final afterJournalOffset = _readUInt32(file);
       final unknown5 = file.readSync(72);
-
       final characters =
           await CharInfoReader(file: file).read(inPartyCharCount);
       logDebug('characters: $characters');

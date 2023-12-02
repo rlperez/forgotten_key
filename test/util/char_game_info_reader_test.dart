@@ -28,7 +28,6 @@ void main() {
     expect(gameInfo.journalOffset, 130120);
     expect(gameInfo.partyReputation, 140);
     expect(gameInfo.afterJournalOffset, 130744);
-
     expect(gameInfo.toString(), contains('GAME'));
   });
 
