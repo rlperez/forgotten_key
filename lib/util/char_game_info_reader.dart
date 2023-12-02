@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:forgotten_key/models/char_game_info.dart';
+import 'package:forgotten_key/util/char_info_reader.dart';
 import 'package:loggy/loggy.dart';
 
 class CharGameInfoReader with UiLoggy {
@@ -36,6 +37,9 @@ class CharGameInfoReader with UiLoggy {
       final unknown4 = file.readSync(19);
       final afterJournalOffset = _readUInt32(file);
       final unknown5 = file.readSync(72);
+      final characters =
+          await CharInfoReader(file: file).read(inPartyCharCount);
+      logDebug('characters: $characters');
 
       return CharGameInfo(
         path: path,
@@ -60,14 +64,13 @@ class CharGameInfoReader with UiLoggy {
         unknown4: unknown4,
         afterJournalOffset: afterJournalOffset,
         unknown5: unknown5,
+        characters: characters,
       );
     } catch (e) {
       loggy.error(e);
       rethrow;
     } finally {
-      if (file != null) {
-        await file.close();
-      }
+      await file?.close();
     }
   }
 

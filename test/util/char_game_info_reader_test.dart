@@ -10,7 +10,9 @@ void main() {
   });
 
   test('should read valid save game file', () async {
-    final gameInfo = await CharGameInfoReader('test/data/BALDUR.gam').read();
+    final gameInfo =
+        await CharGameInfoReader('test/data/000000024-BarbToDruid/BALDUR.gam')
+            .read();
     expect(gameInfo, isNotNull);
     expect(gameInfo.header, 'GAME');
     expect(gameInfo.gameVersion, 'V2.0');
@@ -26,6 +28,7 @@ void main() {
     expect(gameInfo.journalOffset, 130120);
     expect(gameInfo.partyReputation, 140);
     expect(gameInfo.afterJournalOffset, 130744);
+    expect(gameInfo.toString(), contains('GAME'));
   });
 
   test('should throw an exception if the header is not GAME', () async {
