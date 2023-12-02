@@ -1,14 +1,14 @@
-import 'dart:io';
-
-import 'package:env_variables/env_variables.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:forgotten_key/models/char_game_info.dart';
+import 'dart:io';
+import 'package:env_variables/env_variables.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 
 Future<void> main() async {
   final file = File('.env');
-
   if (await file.exists()) {
     final content = await file.readAsString();
     if (content.isNotEmpty) {
@@ -82,17 +82,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  CharGameInfo? _info;
+  Future<void> _pickFile() async {
+    String? path = await FilePicker.platform
+        .pickFiles(
+            allowMultiple: false,
+            allowedExtensions: ['gam'],
+            type: FileType.custom)
+        .then((value) => value?.files.single.path);
+    if (path != null) {
+      final info = await CharGameInfo.read(path);
+      setState(() {
+        _info = info;
+      });
+    }
   }
 
   @override
@@ -136,16 +139,16 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              "${_info?.path}",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: _pickFile,
+        tooltip: 'Open File',
+        child: const Icon(Icons.file_open),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
