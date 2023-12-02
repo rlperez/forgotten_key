@@ -28,6 +28,8 @@ void main() {
     expect(gameInfo.journalOffset, 130120);
     expect(gameInfo.partyReputation, 140);
     expect(gameInfo.afterJournalOffset, 130744);
+
+    expect(gameInfo.toString(), contains('GAME'));
   });
 
   test('should throw an exception if the header is not GAME', () async {

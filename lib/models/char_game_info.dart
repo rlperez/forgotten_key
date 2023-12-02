@@ -56,9 +56,9 @@ class CharGameInfo with UiLoggy {
       required this.unknown5,
       required this.characters});
 
-  static Future<CharGameInfo> read(String path) async {
-    final info = CharGameInfoReader(path).read();
-    return await info;
+  static Future<CharGameInfo> read(CharGameInfoReader reader) async {
+    final info = await reader.read();
+    return info;
   }
 
   @override

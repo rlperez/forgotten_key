@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:env_variables/env_variables.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:forgotten_key/util/char_game_info_reader.dart';
 import 'package:loggy/loggy.dart';
 
 Future<void> main() async {
@@ -91,7 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
             type: FileType.custom)
         .then((value) => value?.files.single.path);
     if (path != null) {
-      final info = await CharGameInfo.read(path);
+      final reader = CharGameInfoReader(path);
+      final info = await CharGameInfo.read(reader);
 
       setState(() {
         _info = info;

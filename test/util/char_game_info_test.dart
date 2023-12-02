@@ -37,7 +37,7 @@ void main() {
         unknown5: Uint8List.fromList([0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         characters: []))); // Replace `someValue` with the actual value you expect `read` to return
 
-    final info = await CharGameInfo.read(mockReader);
+    await CharGameInfo.read(mockReader);
     verify(mockReader.read()).called(1);
   });
 }
