@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:forgotten_key/models/char_info.dart';
 import 'package:forgotten_key/util/char_game_info_reader.dart';
 import 'package:loggy/loggy.dart';
 
@@ -27,6 +28,7 @@ class CharGameInfo with UiLoggy {
   final Uint8List unknown4;
   final int afterJournalOffset;
   final Uint8List unknown5;
+  final List<CharInfo> characters;
 
   /// Creates a new [CharGameInfo] instance. Arguments are ordered as they appear in file.
   CharGameInfo(
@@ -51,7 +53,8 @@ class CharGameInfo with UiLoggy {
       required this.partyReputation,
       required this.unknown4,
       required this.afterJournalOffset,
-      required this.unknown5});
+      required this.unknown5,
+      required this.characters});
 
   static Future<CharGameInfo> read(String path) async {
     final info = CharGameInfoReader(path).read();
@@ -83,6 +86,9 @@ class CharGameInfo with UiLoggy {
         '  unknown4: $unknown4,\n'
         '  afterJournalOffset: $afterJournalOffset,\n'
         '  unknown5: $unknown5,\n'
+        '  party: [\n'
+        '    ${characters.join('\n    ')}\n'
+        '  ]\n'
         '}';
   }
 }
