@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:forgotten_key/util/char_game_info_reader.dart';
 import 'package:loggy/loggy.dart';
 
+// 179 total bytes plus inPartyCharCount * 352 bytes plus outPartyCharCount * 352 bytes plus globalVarCount * 84 bytes plus journalCount * 8 bytes
 class CharGameInfo with UiLoggy {
   final String path;
   final String header;
