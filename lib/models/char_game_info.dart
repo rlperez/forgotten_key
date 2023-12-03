@@ -29,7 +29,8 @@ class CharGameInfo with UiLoggy {
   final Uint8List unknown4;
   final int afterJournalOffset;
   final Uint8List unknown5;
-  final List<CharInfo> characters;
+  final List<CharInfo> inPartyCharacters;
+  final List<CharInfo> outOfPartyCharacters;
   final List<GameGlobalValue> globalVars;
 
   /// Creates a new [CharGameInfo] instance. Arguments are ordered as they appear in file.
@@ -56,7 +57,8 @@ class CharGameInfo with UiLoggy {
       required this.unknown4,
       required this.afterJournalOffset,
       required this.unknown5,
-      required this.characters,
+      required this.inPartyCharacters,
+      required this.outOfPartyCharacters,
       required this.globalVars});
 
   static Future<CharGameInfo> read(CharGameInfoReader reader) async {
@@ -89,8 +91,11 @@ class CharGameInfo with UiLoggy {
         '  unknown4: $unknown4,\n'
         '  afterJournalOffset: $afterJournalOffset,\n'
         '  unknown5: $unknown5,\n'
-        '  party: [\n'
-        '    ${characters.join('\n    ')}\n'
+        '  inPartyCharacters: [\n'
+        '    ${inPartyCharacters.join('\n    ')}\n'
+        '  ]\n'
+        '  outOfPartyCharacters: [\n'
+        '    ${outOfPartyCharacters.join('\n    ')}\n'
         '  ]\n'
         '  globalVars: [\n'
         '    ${globalVars.join('\n    ')}\n'

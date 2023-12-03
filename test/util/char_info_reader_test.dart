@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:forgotten_key/util/byte_length.dart';
 import 'package:forgotten_key/util/char_info_reader.dart';
 
 void main() {
@@ -12,6 +13,7 @@ void main() {
   test('should read valid save game file', () async {
     RandomAccessFile file =
         await File('test/data/000000024-BarbToDruid/BALDUR.gam').open();
+    file.setPositionSync(gameInfoByteSize);
     // There are 6 members in this file's party.
     final charInfo = await CharInfoReader(file: file).read(6);
 
