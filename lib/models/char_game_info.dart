@@ -9,7 +9,7 @@ import 'package:loggy/loggy.dart';
 class CharGameInfo with UiLoggy {
   final String path;
   final String header;
-  final String gameVersion;
+  final String version;
   final int gameTime;
   final Uint8List unknown0;
   final int partyGold;
@@ -36,7 +36,7 @@ class CharGameInfo with UiLoggy {
   CharGameInfo(
       {required this.path,
       required this.header,
-      required this.gameVersion,
+      required this.version,
       required this.gameTime,
       required this.unknown0,
       required this.partyGold,
@@ -69,7 +69,7 @@ class CharGameInfo with UiLoggy {
     return 'CharGameInfo {\n'
         '  path: $path,\n'
         '  header: $header,\n'
-        '  gameVersion: $gameVersion,\n'
+        '  version: $version,\n'
         '  gameTime: $gameTime,\n'
         '  unknown0: $unknown0,\n'
         '  partyGold: $partyGold,\n'

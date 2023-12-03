@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:forgotten_key/models/game_global_value.dart';
+import 'package:forgotten_key/util/byte_length.dart';
+import 'package:forgotten_key/util/byte_util.dart';
 import 'package:loggy/loggy.dart';
 
 class GameGlobalValueReader with UiLoggy {
@@ -14,16 +16,19 @@ class GameGlobalValueReader with UiLoggy {
 
     try {
       for (var i = 0; i < globalVarCount; i++) {
-        final name = _readString(32);
-        final unknown0 = file.readSync(8);
-        final value = _readInt32();
-        final unknown2 = file.readSync(40);
+        final name = ByteUtils.readString(
+            file, globalValueByteLength(ByteLengthKeys.gameGlobalValueName));
+        final unknown0 = file.readSync(
+            globalValueByteLength(ByteLengthKeys.gameGlobalValueUnknown0));
+        final value = ByteUtils.readInt32(file);
+        final unknown1 = file.readSync(
+            globalValueByteLength(ByteLengthKeys.gameGlobalValueUnknown1));
 
         values.add(GameGlobalValue(
           name: name,
           unknown0: unknown0,
           value: value,
-          unknown1: unknown2,
+          unknown1: unknown1,
         ));
       }
     } catch (e) {
@@ -32,18 +37,5 @@ class GameGlobalValueReader with UiLoggy {
     }
 
     return values;
-  }
-
-  String _readString(int length) {
-    final name = file.readSync(length);
-    return String.fromCharCodes(name);
-  }
-
-  int _readInt32() {
-    final bytes = file.readSync(4);
-    return bytes[0] +
-        bytes[1] * 256 +
-        bytes[2] * 256 * 256 +
-        bytes[3] * 256 * 256 * 256;
   }
 }

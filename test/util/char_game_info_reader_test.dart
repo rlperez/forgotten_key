@@ -15,7 +15,7 @@ void main() {
             .read();
     expect(gameInfo, isNotNull);
     expect(gameInfo.header, 'GAME');
-    expect(gameInfo.gameVersion, 'V2.0');
+    expect(gameInfo.version, 'V2.0');
     expect(gameInfo.gameTime, 122818);
     expect(gameInfo.partyGold, 1959);
     expect(gameInfo.inPartyCharOffset, 180);
