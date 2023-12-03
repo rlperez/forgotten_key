@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:forgotten_key/models/char_game_info.dart';
+import 'package:forgotten_key/util/byte_length.dart';
 import 'package:forgotten_key/util/byte_util.dart';
 import 'package:forgotten_key/util/char_info_reader.dart';
 import 'package:forgotten_key/util/game_global_value_reader.dart';
@@ -17,27 +18,27 @@ class CharGameInfoReader with UiLoggy {
       // Total content of GameInfo in save file should be 179 bytes
       file = await File(path).open();
       final header = _readHeader(file);
-      final gameVersion = _readVersion(file);
+      final version = _readVersion(file);
       // Read the current save game time. Every 300 game time units is 1 hour. The actual displayed game time is 2100 units more than is displayed.
       final gameTime = ByteUtils.readUInt32(file);
-      final unknown0 = file.readSync(12);
+      final unknown0 = file.readSync(byteLength(ByteLengthKeys.unknown0));
       final partyGold = ByteUtils.readUInt32(file);
-      final unknown1 = file.readSync(4);
+      final unknown1 = file.readSync(byteLength(ByteLengthKeys.unknown1));
       final inPartyCharOffset = ByteUtils.readUInt32(file);
       final inPartyCharCount = ByteUtils.readUInt32(file);
-      final unknown2 = file.readSync(8);
+      final unknown2 = file.readSync(byteLength(ByteLengthKeys.unknown2));
       final outPartyCharOffset = ByteUtils.readUInt32(file);
       final outPartyCharCount = ByteUtils.readUInt32(file);
       final globalVarOffset = ByteUtils.readUInt32(file);
       final globalVarCount = ByteUtils.readUInt32(file);
-      final areaRes = file.readSync(8);
-      final unknown3 = file.readSync(4);
+      final areaRes = file.readSync(byteLength(ByteLengthKeys.areaRes));
+      final unknown3 = file.readSync(byteLength(ByteLengthKeys.unknown3));
       final journalCount = ByteUtils.readUInt32(file);
       final journalOffset = ByteUtils.readUInt32(file);
       final partyReputation = ByteUtils.readUInt8(file);
-      final unknown4 = file.readSync(19);
+      final unknown4 = file.readSync(byteLength(ByteLengthKeys.unknown4));
       final afterJournalOffset = ByteUtils.readUInt32(file);
-      final unknown5 = file.readSync(72);
+      final unknown5 = file.readSync(byteLength(ByteLengthKeys.unknown5));
       // Characters should be in party and out party count times
       final characters =
           await CharInfoReader(file: file).read(inPartyCharCount);
@@ -47,7 +48,7 @@ class CharGameInfoReader with UiLoggy {
       return CharGameInfo(
         path: path,
         header: header,
-        gameVersion: gameVersion,
+        version: version,
         gameTime: gameTime,
         unknown0: unknown0,
         partyGold: partyGold,

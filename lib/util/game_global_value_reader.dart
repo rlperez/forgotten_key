@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:forgotten_key/models/game_global_value.dart';
+import 'package:forgotten_key/util/byte_length.dart';
 import 'package:forgotten_key/util/byte_util.dart';
 import 'package:loggy/loggy.dart';
 
@@ -15,16 +16,19 @@ class GameGlobalValueReader with UiLoggy {
 
     try {
       for (var i = 0; i < globalVarCount; i++) {
-        final name = ByteUtils.readString(file, 32);
-        final unknown0 = file.readSync(8);
+        final name = ByteUtils.readString(
+            file, byteLength(ByteLengthKeys.gameGlobalValueName));
+        final unknown0 =
+            file.readSync(byteLength(ByteLengthKeys.gameGlobalValueUnknown0));
         final value = ByteUtils.readInt32(file);
-        final unknown2 = file.readSync(40);
+        final unknown1 =
+            file.readSync(byteLength(ByteLengthKeys.gameGlobalValueUnknown1));
 
         values.add(GameGlobalValue(
           name: name,
           unknown0: unknown0,
           value: value,
-          unknown1: unknown2,
+          unknown1: unknown1,
         ));
       }
     } catch (e) {

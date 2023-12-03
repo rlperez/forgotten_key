@@ -15,7 +15,7 @@ void main() {
     when(mockReader.read()).thenAnswer((_) => Future.value(CharGameInfo(
         path: 'test_file.gam',
         header: 'GAME',
-        gameVersion: 'V2.0',
+        version: 'V2.0',
         gameTime: 122818,
         unknown0: Uint8List.fromList([0x00, 0x00]),
         partyGold: 1959,
