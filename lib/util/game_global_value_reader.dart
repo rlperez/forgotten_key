@@ -23,14 +23,12 @@ class GameGlobalValueReader with UiLoggy {
           name: name,
           unknown0: unknown0,
           value: value,
-          unknown2: unknown2,
+          unknown1: unknown2,
         ));
       }
     } catch (e) {
       logError(e);
       rethrow;
-    } finally {
-      file.close();
     }
 
     return values;

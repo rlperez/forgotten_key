@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:forgotten_key/models/char_info.dart';
+import 'package:forgotten_key/models/game_global_value.dart';
 import 'package:forgotten_key/util/char_game_info_reader.dart';
 import 'package:loggy/loggy.dart';
 
@@ -29,6 +30,7 @@ class CharGameInfo with UiLoggy {
   final int afterJournalOffset;
   final Uint8List unknown5;
   final List<CharInfo> characters;
+  final List<GameGlobalValue> globalVars;
 
   /// Creates a new [CharGameInfo] instance. Arguments are ordered as they appear in file.
   CharGameInfo(
@@ -54,7 +56,8 @@ class CharGameInfo with UiLoggy {
       required this.unknown4,
       required this.afterJournalOffset,
       required this.unknown5,
-      required this.characters});
+      required this.characters,
+      required this.globalVars});
 
   static Future<CharGameInfo> read(CharGameInfoReader reader) async {
     final info = await reader.read();
@@ -88,6 +91,9 @@ class CharGameInfo with UiLoggy {
         '  unknown5: $unknown5,\n'
         '  party: [\n'
         '    ${characters.join('\n    ')}\n'
+        '  ]\n'
+        '  globalVars: [\n'
+        '    ${globalVars.join('\n    ')}\n'
         '  ]\n'
         '}';
   }

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:forgotten_key/models/char_game_info.dart';
 import 'package:forgotten_key/util/char_info_reader.dart';
+import 'package:forgotten_key/util/game_global_value_reader.dart';
 import 'package:loggy/loggy.dart';
 
 class CharGameInfoReader with UiLoggy {
@@ -39,7 +40,8 @@ class CharGameInfoReader with UiLoggy {
       final unknown5 = file.readSync(72);
       final characters =
           await CharInfoReader(file: file).read(inPartyCharCount);
-      logDebug('characters: $characters');
+      final globalVars = await GameGlobalValueReader(file: file)
+          .read(globalVarOffset, globalVarCount);
 
       return CharGameInfo(
         path: path,
@@ -65,6 +67,7 @@ class CharGameInfoReader with UiLoggy {
         afterJournalOffset: afterJournalOffset,
         unknown5: unknown5,
         characters: characters,
+        globalVars: globalVars,
       );
     } catch (e) {
       loggy.error(e);

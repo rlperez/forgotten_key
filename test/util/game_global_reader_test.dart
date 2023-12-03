@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forgotten_key/util/game_global_value_reader.dart';
-import 'package:forgotten_key/models/game_global_value.dart';
 
 void main() {
   test('should read global values', () async {
