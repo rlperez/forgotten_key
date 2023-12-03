@@ -13,7 +13,6 @@ class CharGameInfoReader with UiLoggy {
 
   Future<CharGameInfo> read() async {
     RandomAccessFile? file;
-
     try {
       // Total content of GameInfo in save file should be 179 bytes
       file = await File(path).open();
@@ -40,16 +39,24 @@ class CharGameInfoReader with UiLoggy {
       final afterJournalOffset = ByteUtils.readUInt32(file);
       final unknown5 = file.readSync(gameByteLength(ByteLengthKeys.unknown5));
 
-      if (file.positionSync() != gameInfoByteSize) {
+      final filePosition = file.positionSync();
+      if (filePosition != gameInfoByteSize &&
+          filePosition != inPartyCharOffset) {
         logError(
-            'File position is ${file.positionSync()} but should be $gameInfoByteSize');
+            'In party characters should be at $inPartyCharOffset but file position is $filePosition.');
         throw Exception(
-            'File position is ${file.positionSync()} but should be $gameInfoByteSize');
+            'In party characters should be at $inPartyCharOffset but file position is $filePosition.');
       }
 
-      // Characters should be in party and out party count times
+      file.setPositionSync(inPartyCharOffset);
       final inPartyCharacters =
           await CharInfoReader(file: file).read(inPartyCharCount);
+
+      file.setPositionSync(outPartyCharOffset);
+      final outOfPartyCharacters =
+          await CharInfoReader(file: file).read(outPartyCharCount);
+
+      file.setPositionSync(globalVarOffset);
       final globalVars = await GameGlobalValueReader(file: file)
           .read(globalVarOffset, globalVarCount);
 
@@ -77,7 +84,7 @@ class CharGameInfoReader with UiLoggy {
         afterJournalOffset: afterJournalOffset,
         unknown5: unknown5,
         inPartyCharacters: inPartyCharacters,
-        outOfPartyCharacters: [],
+        outOfPartyCharacters: outOfPartyCharacters,
         globalVars: globalVars,
       );
     } catch (e) {
@@ -89,7 +96,8 @@ class CharGameInfoReader with UiLoggy {
   }
 
   String _readHeader(RandomAccessFile file) {
-    String headerString = ByteUtils.readString(file, 4);
+    String headerString =
+        ByteUtils.readString(file, gameByteLength(ByteLengthKeys.header));
     logDebug("header: $headerString");
 
     if (headerString != 'GAME') {
@@ -100,7 +108,8 @@ class CharGameInfoReader with UiLoggy {
   }
 
   String _readVersion(RandomAccessFile file) {
-    String versionString = ByteUtils.readString(file, 4);
+    String versionString =
+        ByteUtils.readString(file, gameByteLength(ByteLengthKeys.version));
     logDebug("gameVersion: $versionString");
 
     if (versionString != 'V2.0' && versionString != 'V2.1') {

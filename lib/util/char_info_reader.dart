@@ -11,8 +11,6 @@ class CharInfoReader with UiLoggy {
 
   Future<List<CharInfo>> read(int charCount) async {
     try {
-      // Total content of GameInfo in save file should be 179 bytes
-      await file.setPosition(179);
       List<CharInfo> charInfos = [];
       for (int i = 0; i < charCount; i++) {
         charInfos.add(_readCharInfo(file));
@@ -38,9 +36,9 @@ class CharInfoReader with UiLoggy {
     final viewX = ByteUtils.readUInt16(file);
     final viewY = ByteUtils.readUInt16(file);
     final unknown2 = file.readSync(charByteLength(ByteLengthKeys.charUnknown2));
-    final name = ByteUtils.readString(file, 21);
+    final name =
+        ByteUtils.readString(file, charByteLength(ByteLengthKeys.charName));
     final unknown3 = file.readSync(charByteLength(ByteLengthKeys.charUnknown3));
-
     return CharInfo(
       unknown0: unknown0,
       partyPosition: partyPosition,
