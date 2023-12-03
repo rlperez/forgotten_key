@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:forgotten_key/models/char_game_info.dart';
+import 'package:forgotten_key/util/byte_util.dart';
 import 'package:forgotten_key/util/char_info_reader.dart';
 import 'package:forgotten_key/util/game_global_value_reader.dart';
 import 'package:loggy/loggy.dart';
@@ -19,25 +19,26 @@ class CharGameInfoReader with UiLoggy {
       final header = _readHeader(file);
       final gameVersion = _readVersion(file);
       // Read the current save game time. Every 300 game time units is 1 hour. The actual displayed game time is 2100 units more than is displayed.
-      final gameTime = _readUInt32(file);
+      final gameTime = ByteUtils.readUInt32(file);
       final unknown0 = file.readSync(12);
-      final partyGold = _readUInt32(file);
+      final partyGold = ByteUtils.readUInt32(file);
       final unknown1 = file.readSync(4);
-      final inPartyCharOffset = _readUInt32(file);
-      final inPartyCharCount = _readUInt32(file);
+      final inPartyCharOffset = ByteUtils.readUInt32(file);
+      final inPartyCharCount = ByteUtils.readUInt32(file);
       final unknown2 = file.readSync(8);
-      final outPartyCharOffset = _readUInt32(file);
-      final outPartyCharCount = _readUInt32(file);
-      final globalVarOffset = _readUInt32(file);
-      final globalVarCount = _readUInt32(file);
+      final outPartyCharOffset = ByteUtils.readUInt32(file);
+      final outPartyCharCount = ByteUtils.readUInt32(file);
+      final globalVarOffset = ByteUtils.readUInt32(file);
+      final globalVarCount = ByteUtils.readUInt32(file);
       final areaRes = file.readSync(8);
       final unknown3 = file.readSync(4);
-      final journalCount = _readUInt32(file);
-      final journalOffset = _readUInt32(file);
-      final partyReputation = _readUInt8(file);
+      final journalCount = ByteUtils.readUInt32(file);
+      final journalOffset = ByteUtils.readUInt32(file);
+      final partyReputation = ByteUtils.readUInt8(file);
       final unknown4 = file.readSync(19);
-      final afterJournalOffset = _readUInt32(file);
+      final afterJournalOffset = ByteUtils.readUInt32(file);
       final unknown5 = file.readSync(72);
+      // Characters should be in party and out party count times
       final characters =
           await CharInfoReader(file: file).read(inPartyCharCount);
       final globalVars = await GameGlobalValueReader(file: file)
@@ -78,8 +79,7 @@ class CharGameInfoReader with UiLoggy {
   }
 
   String _readHeader(RandomAccessFile file) {
-    final header = file.readSync(4);
-    String headerString = String.fromCharCodes(header);
+    String headerString = ByteUtils.readString(file, 4);
     logDebug("header: $headerString");
 
     if (headerString != 'GAME') {
@@ -90,8 +90,7 @@ class CharGameInfoReader with UiLoggy {
   }
 
   String _readVersion(RandomAccessFile file) {
-    final version = file.readSync(4);
-    String versionString = String.fromCharCodes(version);
+    String versionString = ByteUtils.readString(file, 4);
     logDebug("gameVersion: $versionString");
 
     if (versionString != 'V2.0' && versionString != 'V2.1') {
@@ -101,17 +100,5 @@ class CharGameInfoReader with UiLoggy {
     }
 
     return versionString;
-  }
-
-  int _readUInt32(RandomAccessFile file) {
-    final offset = file.readSync(4);
-    final byteData = ByteData.sublistView(offset);
-    final value = byteData.getUint32(0, Endian.little);
-    return value;
-  }
-
-  int _readUInt8(RandomAccessFile file) {
-    final value = file.readByteSync();
-    return value;
   }
 }
