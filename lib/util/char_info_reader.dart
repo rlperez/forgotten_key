@@ -26,20 +26,20 @@ class CharInfoReader with UiLoggy {
   }
 
   CharInfo _readCharInfo(RandomAccessFile file) {
-    final unknown0 = file.readSync(byteLength(ByteLengthKeys.charUnknown0));
+    final unknown0 = file.readSync(charByteLength(ByteLengthKeys.charUnknown0));
     final partyPosition = ByteUtils.readUInt16(file);
     final creOffset = ByteUtils.readUInt32(file);
     final creSize = ByteUtils.readUInt32(file);
-    final unknown1 = file.readSync(byteLength(ByteLengthKeys.charUnknown1));
-    final currentArea =
-        ByteUtils.readString(file, byteLength(ByteLengthKeys.charCurrentArea));
+    final unknown1 = file.readSync(charByteLength(ByteLengthKeys.charUnknown1));
+    final currentArea = ByteUtils.readString(
+        file, charByteLength(ByteLengthKeys.charCurrentArea));
     final playerX = ByteUtils.readUInt16(file);
     final playerY = ByteUtils.readUInt16(file);
     final viewX = ByteUtils.readUInt16(file);
     final viewY = ByteUtils.readUInt16(file);
-    final unknown2 = file.readSync(byteLength(ByteLengthKeys.charUnknown2));
+    final unknown2 = file.readSync(charByteLength(ByteLengthKeys.charUnknown2));
     final name = ByteUtils.readString(file, 21);
-    final unknown3 = file.readSync(byteLength(ByteLengthKeys.charUnknown3));
+    final unknown3 = file.readSync(charByteLength(ByteLengthKeys.charUnknown3));
 
     return CharInfo(
       unknown0: unknown0,

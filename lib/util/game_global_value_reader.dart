@@ -17,12 +17,12 @@ class GameGlobalValueReader with UiLoggy {
     try {
       for (var i = 0; i < globalVarCount; i++) {
         final name = ByteUtils.readString(
-            file, byteLength(ByteLengthKeys.gameGlobalValueName));
-        final unknown0 =
-            file.readSync(byteLength(ByteLengthKeys.gameGlobalValueUnknown0));
+            file, globalValueByteLength(ByteLengthKeys.gameGlobalValueName));
+        final unknown0 = file.readSync(
+            globalValueByteLength(ByteLengthKeys.gameGlobalValueUnknown0));
         final value = ByteUtils.readInt32(file);
-        final unknown1 =
-            file.readSync(byteLength(ByteLengthKeys.gameGlobalValueUnknown1));
+        final unknown1 = file.readSync(
+            globalValueByteLength(ByteLengthKeys.gameGlobalValueUnknown1));
 
         values.add(GameGlobalValue(
           name: name,

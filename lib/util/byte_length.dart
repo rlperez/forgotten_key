@@ -39,11 +39,7 @@ enum ByteLengthKeys {
   gameGlobalValueUnknown1,
 }
 
-int byteLength(ByteLengthKeys key) {
-  return byteLengthValues[key]!;
-}
-
-const Map<ByteLengthKeys, int> byteLengthValues = {
+const Map<ByteLengthKeys, int> gameByteLengthValues = {
   ByteLengthKeys.header: 4,
   ByteLengthKeys.version: 4,
   ByteLengthKeys.gameTime: 4,
@@ -65,6 +61,9 @@ const Map<ByteLengthKeys, int> byteLengthValues = {
   ByteLengthKeys.unknown4: 19,
   ByteLengthKeys.afterJournalOffset: 4,
   ByteLengthKeys.unknown5: 72,
+};
+
+const Map<ByteLengthKeys, int> charByteLengthValues = {
   ByteLengthKeys.charUnknown0: 2,
   ByteLengthKeys.charPartyPosition: 2,
   ByteLengthKeys.charCreOffset: 4,
@@ -77,9 +76,31 @@ const Map<ByteLengthKeys, int> byteLengthValues = {
   ByteLengthKeys.charViewY: 2,
   ByteLengthKeys.charUnknown2: 152,
   ByteLengthKeys.charName: 21,
-  ByteLengthKeys.charUnknown3: 139,
+  ByteLengthKeys.charUnknown3: 139
+};
+
+const Map<ByteLengthKeys, int> globalValueByteLengthValues = {
   ByteLengthKeys.gameGlobalValueName: 32,
   ByteLengthKeys.gameGlobalValueUnknown0: 8,
   ByteLengthKeys.gameGlobalValueValue: 4,
   ByteLengthKeys.gameGlobalValueUnknown1: 40,
 };
+
+int gameByteLength(ByteLengthKeys key) {
+  return gameByteLengthValues[key]!;
+}
+
+int charByteLength(ByteLengthKeys key) {
+  return charByteLengthValues[key]!;
+}
+
+int globalValueByteLength(ByteLengthKeys key) {
+  return globalValueByteLengthValues[key]!;
+}
+
+final int gameInfoByteSize =
+    gameByteLengthValues.values.reduce((a, b) => a + b);
+final int charInfoByteSize =
+    charByteLengthValues.values.reduce((a, b) => a + b);
+final int globalValueByteSize =
+    globalValueByteLengthValues.values.reduce((a, b) => a + b);

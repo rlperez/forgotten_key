@@ -21,24 +21,24 @@ class CharGameInfoReader with UiLoggy {
       final version = _readVersion(file);
       // Read the current save game time. Every 300 game time units is 1 hour. The actual displayed game time is 2100 units more than is displayed.
       final gameTime = ByteUtils.readUInt32(file);
-      final unknown0 = file.readSync(byteLength(ByteLengthKeys.unknown0));
+      final unknown0 = file.readSync(gameByteLength(ByteLengthKeys.unknown0));
       final partyGold = ByteUtils.readUInt32(file);
-      final unknown1 = file.readSync(byteLength(ByteLengthKeys.unknown1));
+      final unknown1 = file.readSync(gameByteLength(ByteLengthKeys.unknown1));
       final inPartyCharOffset = ByteUtils.readUInt32(file);
       final inPartyCharCount = ByteUtils.readUInt32(file);
-      final unknown2 = file.readSync(byteLength(ByteLengthKeys.unknown2));
+      final unknown2 = file.readSync(gameByteLength(ByteLengthKeys.unknown2));
       final outPartyCharOffset = ByteUtils.readUInt32(file);
       final outPartyCharCount = ByteUtils.readUInt32(file);
       final globalVarOffset = ByteUtils.readUInt32(file);
       final globalVarCount = ByteUtils.readUInt32(file);
-      final areaRes = file.readSync(byteLength(ByteLengthKeys.areaRes));
-      final unknown3 = file.readSync(byteLength(ByteLengthKeys.unknown3));
+      final areaRes = file.readSync(gameByteLength(ByteLengthKeys.areaRes));
+      final unknown3 = file.readSync(gameByteLength(ByteLengthKeys.unknown3));
       final journalCount = ByteUtils.readUInt32(file);
       final journalOffset = ByteUtils.readUInt32(file);
       final partyReputation = ByteUtils.readUInt8(file);
-      final unknown4 = file.readSync(byteLength(ByteLengthKeys.unknown4));
+      final unknown4 = file.readSync(gameByteLength(ByteLengthKeys.unknown4));
       final afterJournalOffset = ByteUtils.readUInt32(file);
-      final unknown5 = file.readSync(byteLength(ByteLengthKeys.unknown5));
+      final unknown5 = file.readSync(gameByteLength(ByteLengthKeys.unknown5));
       // Characters should be in party and out party count times
       final characters =
           await CharInfoReader(file: file).read(inPartyCharCount);
