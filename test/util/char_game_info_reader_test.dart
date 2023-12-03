@@ -29,6 +29,21 @@ void main() {
     expect(gameInfo.partyReputation, 140);
     expect(gameInfo.afterJournalOffset, 130744);
     expect(gameInfo.toString(), contains('GAME'));
+    expect(gameInfo.inPartyCharacters.length, 6);
+    expect(
+        gameInfo.inPartyCharacters
+            .singleWhere((element) => element.name.contains("Trell")),
+        isNotNull);
+    expect(gameInfo.outOfPartyCharacters, isNotNull);
+    expect(gameInfo.outOfPartyCharacters, isNotEmpty);
+    expect(gameInfo.outOfPartyCharacters.length, gameInfo.outPartyCharCount);
+    expect(gameInfo.outOfPartyCharacters.map((character) => character.name),
+        everyElement(List.filled(21, '\x00').join()));
+    expect(gameInfo.globalVars, isNotNull);
+    expect(gameInfo.globalVars, isNotEmpty);
+    expect(gameInfo.globalVars.length, gameInfo.globalVarCount);
+    expect(gameInfo.globalVars.any((v) => v.name.contains('ENTEREDBEREGOST')),
+        isTrue);
   });
 
   test('should throw an exception if the header is not GAME', () async {
