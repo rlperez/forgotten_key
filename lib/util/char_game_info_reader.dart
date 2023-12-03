@@ -39,8 +39,16 @@ class CharGameInfoReader with UiLoggy {
       final unknown4 = file.readSync(gameByteLength(ByteLengthKeys.unknown4));
       final afterJournalOffset = ByteUtils.readUInt32(file);
       final unknown5 = file.readSync(gameByteLength(ByteLengthKeys.unknown5));
+
+      if (file.positionSync() != gameInfoByteSize) {
+        logError(
+            'File position is ${file.positionSync()} but should be $gameInfoByteSize');
+        throw Exception(
+            'File position is ${file.positionSync()} but should be $gameInfoByteSize');
+      }
+
       // Characters should be in party and out party count times
-      final characters =
+      final inPartyCharacters =
           await CharInfoReader(file: file).read(inPartyCharCount);
       final globalVars = await GameGlobalValueReader(file: file)
           .read(globalVarOffset, globalVarCount);
@@ -68,7 +76,8 @@ class CharGameInfoReader with UiLoggy {
         unknown4: unknown4,
         afterJournalOffset: afterJournalOffset,
         unknown5: unknown5,
-        characters: characters,
+        inPartyCharacters: inPartyCharacters,
+        outOfPartyCharacters: [],
         globalVars: globalVars,
       );
     } catch (e) {

@@ -35,7 +35,8 @@ void main() {
         unknown4: Uint8List.fromList([0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
         afterJournalOffset: 130744,
         unknown5: Uint8List.fromList([0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
-        characters: [],
+        inPartyCharacters: [],
+        outOfPartyCharacters: [],
         globalVars: []))); // Replace `someValue` with the actual value you expect `read` to return
 
     await CharGameInfo.read(mockReader);
