@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:env_variables/env_variables.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:forgotten_key/models/party_member.dart';
+import 'package:forgotten_key/ui/party/party_grid_widget.dart';
 import 'package:forgotten_key/util/char_game_info_reader.dart';
 import 'package:loggy/loggy.dart';
 
@@ -84,6 +86,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   CharGameInfo? _info;
+  PartyGridWidget? _partyGridWidget;
+
   Future<void> _pickFile() async {
     String? path = await FilePicker.platform
         .pickFiles(
@@ -94,6 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
     if (path != null) {
       final reader = CharGameInfoReader(path);
       final info = await CharGameInfo.read(reader);
+      final pms = info.inPartyCharacters.map((p) => PartyMember(
+          name: p.name, avatarUrl: '', klass: p.partyPosition.toString()));
+
+      List<PartyMember> sortedMembers = List.from(pms)
+        ..sort((a, b) => int.parse(a.klass) - int.parse(b.klass));
+      _partyGridWidget = PartyGridWidget(members: sortedMembers);
 
       setState(() {
         _info = info;
@@ -138,13 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              "${_info?.toString()}",
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            _partyGridWidget ?? const Text('No party members'),
           ],
         ),
       ),
