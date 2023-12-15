@@ -6,7 +6,7 @@ import 'package:env_variables/env_variables.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:forgotten_key/models/party_member.dart';
-import 'package:forgotten_key/ui/party/party_grid_widget.dart';
+import 'package:forgotten_key/ui/party/party_navigation_rail.dart';
 import 'package:forgotten_key/util/char_game_info_reader.dart';
 import 'package:loggy/loggy.dart';
 
@@ -85,78 +85,180 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  CharGameInfo? _info;
-  PartyGridWidget? _partyGridWidget;
-
-  Future<void> _pickFile() async {
-    String? path = await FilePicker.platform
-        .pickFiles(
-            allowMultiple: false,
-            allowedExtensions: ['gam'],
-            type: FileType.custom)
-        .then((value) => value?.files.single.path);
-    if (path != null) {
-      final reader = CharGameInfoReader(path);
-      final info = await CharGameInfo.read(reader);
-      final pms = info.inPartyCharacters.map((p) => PartyMember(
-          name: p.name, avatarUrl: '', klass: p.partyPosition.toString()));
-
-      List<PartyMember> sortedMembers = List.from(pms)
-        ..sort((a, b) => int.parse(a.klass) - int.parse(b.klass));
-      _partyGridWidget = PartyGridWidget(members: sortedMembers);
-
-      setState(() {
-        _info = info;
-      });
-    }
-  }
+  int _selectedIndex = 0;
+  NavigationRailLabelType labelType = NavigationRailLabelType.all;
+  bool showLeading = false;
+  bool showTrailing = false;
+  double groupAlignment = -1.0;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Row(
           children: <Widget>[
-            _partyGridWidget ?? const Text('No party members'),
+            NavigationRail(
+              selectedIndex: _selectedIndex,
+              groupAlignment: groupAlignment,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              labelType: labelType,
+              leading: showLeading
+                  ? FloatingActionButton(
+                      elevation: 0,
+                      onPressed: () {
+                        // Add your onPressed code here!
+                      },
+                      child: const Icon(Icons.add),
+                    )
+                  : const SizedBox(),
+              trailing: showTrailing
+                  ? IconButton(
+                      onPressed: () {
+                        // Add your onPressed code here!
+                      },
+                      icon: const Icon(Icons.more_horiz_rounded),
+                    )
+                  : const SizedBox(),
+              destinations: <NavigationRailDestination>[
+                const NavigationRailDestination(
+                  icon: Icon(Icons.favorite_border),
+                  selectedIcon: Icon(Icons.favorite),
+                  label: Text('First'),
+                ),
+                const NavigationRailDestination(
+                  icon: Badge(child: Icon(Icons.bookmark_border)),
+                  selectedIcon: Badge(child: Icon(Icons.book)),
+                  label: Text('Second'),
+                ),
+                NavigationRailDestination(
+                  icon: Badge(
+                    label: const Text('4'),
+                    child: Image.file(
+                        File('test/data/000000024-BarbToDruid/PORTRT0.bmp')),
+                  ),
+                  selectedIcon: Badge(
+                    label: const Text('4'),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.blue, // Specify the border color here
+                            width: 3, // Specify the border width here
+                          ),
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(1)), // Your existing radius
+                        ),
+                        child: Image.file(File(
+                            'test/data/000000024-BarbToDruid/PORTRT0.bmp'))),
+                  ),
+                  label: const Text('Third'),
+                ),
+              ],
+            ),
+            const VerticalDivider(thickness: 1, width: 1),
+            // This is the main content.
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('selectedIndex: $_selectedIndex'),
+                  const SizedBox(height: 20),
+                  Text('Label type: ${labelType.name}'),
+                  const SizedBox(height: 10),
+                  OverflowBar(
+                    spacing: 10.0,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            labelType = NavigationRailLabelType.none;
+                          });
+                        },
+                        child: const Text('None'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            labelType = NavigationRailLabelType.selected;
+                          });
+                        },
+                        child: const Text('Selected'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            labelType = NavigationRailLabelType.all;
+                          });
+                        },
+                        child: const Text('All'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text('Group alignment: $groupAlignment'),
+                  const SizedBox(height: 10),
+                  OverflowBar(
+                    spacing: 10.0,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            groupAlignment = -1.0;
+                          });
+                        },
+                        child: const Text('Top'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            groupAlignment = 0.0;
+                          });
+                        },
+                        child: const Text('Center'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            groupAlignment = 1.0;
+                          });
+                        },
+                        child: const Text('Bottom'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  OverflowBar(
+                    spacing: 10.0,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            showLeading = !showLeading;
+                          });
+                        },
+                        child:
+                            Text(showLeading ? 'Hide Leading' : 'Show Leading'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            showTrailing = !showTrailing;
+                          });
+                        },
+                        child: Text(
+                            showTrailing ? 'Hide Trailing' : 'Show Trailing'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _pickFile,
-        tooltip: 'Open File',
-        child: const Icon(Icons.file_open),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
